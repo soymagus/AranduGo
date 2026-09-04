@@ -21,7 +21,7 @@ Aplicación TypeScript/React basada en Vinext, con persistencia D1 y almacenamie
 ## Desarrollo
 
 ```bash
-npm run install:ci
+npm install
 npm run build
 ```
 

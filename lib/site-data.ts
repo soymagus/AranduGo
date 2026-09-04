@@ -1,18 +1,21 @@
 export type GalleryItem = { id: string; image: string; title: string; description: string; ctaLabel: string; ctaUrl: string; visible: boolean };
 export type ModuleKey = "hero" | "quick" | "about" | "services" | "gallery" | "location" | "contact" | "social" | "free1" | "free2";
 export type ModuleConfig = { key: ModuleKey; label: string; active: boolean; background: string; text: string; accent: string };
-export type FreeSection = { id: "free1" | "free2"; title: string; menuLabel: string; showInMenu: boolean; html: string; images: string[]; ctaLabel: string; ctaUrl: string };
+export type FreeMedia = { id: string; type: "image" | "youtube"; url: string; caption: string };
+export type FreeSection = { id: "free1" | "free2"; title: string; menuLabel: string; showInMenu: boolean; html: string; images: string[]; media: FreeMedia[]; ctaLabel: string; ctaUrl: string };
 export type SiteData = {
   business: { name: string; category: string; slogan: string; description: string; phone: string; whatsapp: string; email: string; address: string; hours: string; mapsUrl: string; mapsEmbedUrl: string };
   hero: { title: string; text: string; image: string };
-  about: { title: string; text: string };
+  about: { title: string; text: string; showInMenu: boolean };
   services: Array<{ id: string; title: string; description: string }>;
   gallery: GalleryItem[];
   socials: { facebook: string; instagram: string; linkedin: string; youtube: string };
   galleryLayout: { rows: number; columns: number };
-  contactForm: { enabled: boolean; captchaEnabled: boolean; recipientLabel: string };
-  header: { identityType: "initial" | "logo-text" | "logo"; initial: string; logo: string; logoShape: "square" | "rectangle"; logoSize: number; showName: boolean; nameText: string; background: string; text: string };
-  footer: { showLogo: boolean; showName: boolean; showContact: boolean; showSocials: boolean; legalText: string; showPoweredBy: boolean; background: string; text: string };
+  contactForm: { enabled: boolean; captchaEnabled: boolean; captchaType: "none" | "integrated"; challengeMethod: "math" | "checkbox" | "question"; challengeQuestion: string; challengeAnswer: string; recipientLabel: string };
+  seo: { allowIndexing: boolean };
+  legal: { mode: "predefined" | "custom"; termsHtml: string; privacyHtml: string; showInHeaderMenu: boolean };
+  header: { identityType: "initial" | "logo"; initial: string; logo: string; logoShape: "square" | "rectangle"; logoSize: number; maintainAspect: boolean; logoWidth: number; showName: boolean; nameText: string; background: string; text: string };
+  footer: { showLogo: boolean; showName: boolean; showContact: boolean; showSocials: boolean; showLegalLinks: boolean; legalText: string; showPoweredBy: boolean; background: string; text: string };
   freeSections: FreeSection[];
   modules: ModuleConfig[];
 };
@@ -33,7 +36,7 @@ export const defaultModules: ModuleConfig[] = [
 export const demoData: SiteData = {
   business: { name: "Ferretería San Martín", category: "Ferretería", slogan: "Todo para tu hogar, taller y construcción", description: "Herramientas, materiales y asesoramiento para que cada proyecto sea un éxito.", phone: "+595 981 123 456", whatsapp: "595981123456", email: "ventas@sanmartin.com.py", address: "Av. San Martín 1234, Asunción", hours: "Lun. a vie. 08:00–18:30 · Sáb. 08:00–13:00", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Asunción%2C+Paraguay", mapsEmbedUrl: "https://www.google.com/maps?q=Asunción%2C+Paraguay&output=embed" },
   hero: { title: "Todo para tu hogar, taller y construcción", text: "Calidad, cercanía y asesoramiento para resolver cada proyecto.", image: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?auto=format&fit=crop&w=1400&q=82" },
-  about: { title: "Más que una ferretería", text: "Somos un negocio familiar con más de 15 años de experiencia. Nos enfocamos en brindar soluciones prácticas y atención personalizada." },
+  about: { title: "Más que una ferretería", text: "Somos un negocio familiar con más de 15 años de experiencia. Nos enfocamos en brindar soluciones prácticas y atención personalizada.", showInMenu: true },
   services: [
     { id: "s1", title: "Herramientas eléctricas", description: "Equipos y accesorios para profesionales." },
     { id: "s2", title: "Materiales de construcción", description: "Todo lo necesario para tu obra." },
@@ -47,12 +50,14 @@ export const demoData: SiteData = {
   ],
   socials: { facebook: "https://facebook.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com", youtube: "https://youtube.com" },
   galleryLayout: { rows: 1, columns: 3 },
-  contactForm: { enabled: true, captchaEnabled: true, recipientLabel: "Atención comercial" },
-  header: { identityType: "initial", initial: "F", logo: "", logoShape: "square", logoSize: 36, showName: true, nameText: "Ferretería San Martín", background: "#ffffff", text: "#172033" },
-  footer: { showLogo: true, showName: true, showContact: true, showSocials: false, legalText: "© 2026 Ferretería San Martín. Todos los derechos reservados.", showPoweredBy: true, background: "#ffffff", text: "#526078" },
+  contactForm: { enabled: true, captchaEnabled: true, captchaType: "integrated", challengeMethod: "math", challengeQuestion: "¿Cuál es el color del cielo en un día despejado?", challengeAnswer: "azul", recipientLabel: "Atención comercial" },
+  seo: { allowIndexing: true },
+  legal: { mode: "predefined", termsHtml: "", privacyHtml: "", showInHeaderMenu: false },
+  header: { identityType: "initial", initial: "F", logo: "", logoShape: "square", logoSize: 36, maintainAspect: true, logoWidth: 180, showName: true, nameText: "Ferretería San Martín", background: "#ffffff", text: "#172033" },
+  footer: { showLogo: true, showName: true, showContact: true, showSocials: false, showLegalLinks: true, legalText: "© 2026 Ferretería San Martín. Todos los derechos reservados.", showPoweredBy: true, background: "#ffffff", text: "#526078" },
   freeSections: [
-    { id: "free1", title: "Nuestra experiencia", menuLabel: "Experiencia", showInMenu: true, html: "<p>Contá aquí una historia, novedad o información especial de tu negocio.</p>", images: [], ctaLabel: "", ctaUrl: "" },
-    { id: "free2", title: "Información adicional", menuLabel: "Más información", showInMenu: false, html: "<p>Esta segunda sección puede activarse cuando la necesites.</p>", images: [], ctaLabel: "", ctaUrl: "" },
+    { id: "free1", title: "Nuestra experiencia", menuLabel: "Experiencia", showInMenu: true, html: "<p>Contá aquí una historia, novedad o información especial de tu negocio.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
+    { id: "free2", title: "Información adicional", menuLabel: "Más información", showInMenu: false, html: "<p>Esta segunda sección puede activarse cuando la necesites.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
   ],
   modules: defaultModules,
 };
@@ -69,9 +74,11 @@ export function normalizeSiteData(input: Partial<SiteData> | null | undefined): 
     socials: { ...demoData.socials, ...(input?.socials ?? {}) },
     galleryLayout: { ...demoData.galleryLayout, ...(input?.galleryLayout ?? {}) },
     contactForm: { ...demoData.contactForm, ...(input?.contactForm ?? {}) },
-    header: { ...demoData.header, ...(input?.header ?? {}) },
+    seo: { ...demoData.seo, ...(input?.seo ?? {}) },
+    legal: { ...demoData.legal, ...(input?.legal ?? {}) },
+    header: { ...demoData.header, ...(input?.header ?? {}), identityType: input?.header?.identityType === "initial" ? "initial" : input?.header?.identityType ? "logo" : demoData.header.identityType },
     footer: { ...demoData.footer, ...(input?.footer ?? {}) },
-    freeSections: input?.freeSections ?? demoData.freeSections,
+    freeSections: (input?.freeSections ?? demoData.freeSections).map((f,i) => ({ ...demoData.freeSections[i], ...f, media: f.media ?? (f.images ?? []).map((url,j)=>({id:`legacy-${j}`,type:"image" as const,url,caption:""})) })),
     services: input?.services ?? demoData.services,
     gallery: input?.gallery ?? demoData.gallery,
     modules: normalizedModules,
@@ -80,6 +87,19 @@ export function normalizeSiteData(input: Partial<SiteData> | null | undefined): 
 
 export function resetDesign(data: SiteData): SiteData {
   return { ...data, modules: defaultModules.map((m) => ({ ...m })) };
+}
+
+export function predefinedTerms(businessName: string) {
+  return `<h2>Términos de Servicio</h2><p>Al utilizar este sitio aceptás hacerlo de manera lícita y responsable. La información, disponibilidad, precios y condiciones de los productos o servicios de ${businessName} pueden actualizarse sin previo aviso.</p><p>Las consultas enviadas no constituyen una contratación ni una reserva hasta recibir confirmación expresa del comercio. Los enlaces externos se brindan como referencia y se rigen por las condiciones de sus respectivos proveedores.</p>`;
+}
+
+export function predefinedPrivacy(businessName: string) {
+  return `<h2>Política de Privacidad</h2><p>${businessName} utiliza los datos enviados mediante sus canales de contacto únicamente para responder consultas, brindar información y gestionar solicitudes relacionadas con sus productos o servicios.</p><p>No se comercializan los datos personales. La persona interesada puede solicitar su actualización o eliminación utilizando los medios de contacto publicados en este sitio.</p>`;
+}
+
+export function legalHtml(data: SiteData, kind: "terms" | "privacy") {
+  if (data.legal.mode === "custom") return kind === "terms" ? data.legal.termsHtml || predefinedTerms(data.business.name) : data.legal.privacyHtml || predefinedPrivacy(data.business.name);
+  return kind === "terms" ? predefinedTerms(data.business.name) : predefinedPrivacy(data.business.name);
 }
 
 export const colorSchemes = [

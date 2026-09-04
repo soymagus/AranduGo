@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebookF, faInstagram, faLinkedinIn, faYoutube } from "@fortawesome/free-brands-svg-icons";
-const entries=[{key:"facebook",icon:faFacebookF,color:"#1877F2"},{key:"instagram",icon:faInstagram,color:"#E4405F"},{key:"linkedin",icon:faLinkedinIn,color:"#0A66C2"},{key:"youtube",icon:faYoutube,color:"#FF0000"}] as const;
-export default function SocialIcons({socials}:{socials:Record<string,string>}){return <div>{entries.map(x=>socials[x.key]&&<a key={x.key} href={socials[x.key]} aria-label={x.key} style={{color:x.color}}><FontAwesomeIcon icon={x.icon}/></a>)}</div>}
+import { faFacebookF, faInstagram, faLinkedinIn, faYoutube, faXTwitter } from "@fortawesome/free-brands-svg-icons";
+import { Link as LinkIcon } from "lucide-react";
+const entries=[{key:"facebook",icon:faFacebookF,color:"#1877F2",label:"Facebook"},{key:"instagram",icon:faInstagram,color:"#E4405F",label:"Instagram"},{key:"x",icon:faXTwitter,color:"#111111",label:"X"},{key:"linkedin",icon:faLinkedinIn,color:"#0A66C2",label:"LinkedIn"},{key:"youtube",icon:faYoutube,color:"#FF0000",label:"YouTube"}] as const;
+export default function SocialIcons({socials}:{socials:Record<string,string>}){return <div>{entries.map(x=>socials[x.key]&&<a key={x.key} href={socials[x.key]} target="_blank" rel="noreferrer" aria-label={x.label} title={x.label} style={{color:x.color}}><FontAwesomeIcon icon={x.icon}/></a>)}{socials.urlgo&&<a href={socials.urlgo} target="_blank" rel="noreferrer" aria-label="URLGO.me" title="URLGO.me" style={{color:"#0b8f88"}}><LinkIcon/></a>}</div>}

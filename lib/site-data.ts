@@ -6,7 +6,7 @@ export type MenuItemSetting = { visible: boolean; parent: MenuKey | null };
 export type PhoneType = "landline" | "mobile" | "whatsapp";
 export type PhoneEntry = { id: string; label: string; number: string; type: PhoneType; showInQuick: boolean; showInContact: boolean };
 export type FreeMedia = { id: string; type: "image" | "youtube"; url: string; caption: string };
-export type FreeSection = { id: "free1" | "free2"; title: string; menuLabel: string; showInMenu: boolean; html: string; images: string[]; media: FreeMedia[]; ctaLabel: string; ctaUrl: string };
+export type FreeSection = { id: "free1" | "free2"; title: string; menuLabel: string; publicLabel: string; showInMenu: boolean; html: string; images: string[]; media: FreeMedia[]; ctaLabel: string; ctaUrl: string };
 export type SiteData = {
   business: { name: string; category: string; slogan: string; description: string; phone: string; whatsapp: string; email: string; address: string; hours: string; mapsUrl: string; mapsEmbedUrl: string };
   phones: PhoneEntry[];
@@ -80,8 +80,8 @@ export const demoData: SiteData = {
   header: { identityType: "initial", initial: "F", logo: "", logoShape: "square", logoSize: 36, maintainAspect: true, logoWidth: 180, showName: true, nameText: "Ferretería San Martín", background: "#ffffff", text: "#172033" },
   footer: { showLogo: true, showName: true, showContact: true, showSocials: false, showLegalLinks: true, legalText: "© 2026 Ferretería San Martín. Todos los derechos reservados.", showPoweredBy: true, background: "#ffffff", text: "#526078" },
   freeSections: [
-    { id: "free1", title: "Nuestra experiencia", menuLabel: "Experiencia", showInMenu: true, html: "<p>Contá aquí una historia, novedad o información especial de tu negocio.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
-    { id: "free2", title: "Información adicional", menuLabel: "Más información", showInMenu: false, html: "<p>Esta segunda sección puede activarse cuando la necesites.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
+    { id: "free1", title: "Nuestra experiencia", menuLabel: "Experiencia", publicLabel: "Experiencia", showInMenu: true, html: "<p>Contá aquí una historia, novedad o información especial de tu negocio.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
+    { id: "free2", title: "Información adicional", menuLabel: "Más información", publicLabel: "Información", showInMenu: false, html: "<p>Esta segunda sección puede activarse cuando la necesites.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
   ],
   customCode: { css:"", analytics:"" },
   modules: defaultModules,

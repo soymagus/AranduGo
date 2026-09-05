@@ -1,0 +1,6 @@
+"use client";
+import { Download, FileJson, Upload } from "lucide-react";
+
+export default function TransferSettings({exportJson,exportCsv,importFile}:{exportJson:()=>void;exportCsv:()=>void;importFile:(file?:File)=>void}){
+ return <section className="editor-card"><div className="card-head"><div><small>Portabilidad y respaldo</small><h2>Importar y exportar contenido</h2><p>JSON conserva la configuración completa. CSV sirve como plantilla legible para planillas.</p></div></div><div className="transfer-grid"><article><FileJson/><h3>Exportar contenido</h3><button className="control-button primary" onClick={exportJson}><Download/>Descargar JSON</button><button className="control-button secondary" onClick={exportCsv}><Download/>Descargar CSV</button></article><article><Upload/><h3>Importar contenido</h3><label className="control-button primary"><Upload/>Elegir JSON o TXT<input type="file" accept=".json,.txt,.csv" onChange={e=>importFile(e.target.files?.[0])}/></label></article><article><Download/><h3>Respaldo completo</h3><p>Incluye JSON, contenido publicado e imágenes alojadas.</p><a className="control-button primary" href="/api/backup"><Download/>Descargar ZIP</a></article></div></section>;
+}

@@ -44,3 +44,19 @@ CREATE TABLE IF NOT EXISTS {{prefix}}password_resets (
  INDEX idx_reset_expires (expires_at),
  CONSTRAINT fk_reset_user FOREIGN KEY (user_id) REFERENCES {{prefix}}users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS {{prefix}}migrations (
+ migration VARCHAR(190) PRIMARY KEY,
+ executed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS {{prefix}}update_history (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ from_version VARCHAR(30) NOT NULL,
+ to_version VARCHAR(30) NOT NULL,
+ status VARCHAR(30) NOT NULL,
+ backup_file VARCHAR(255) NULL,
+ details TEXT NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ INDEX idx_update_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

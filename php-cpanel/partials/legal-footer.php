@@ -1,3 +1,2 @@
-<?php use AranduGo\Support; ?>
-<footer class="site-footer" style="background:<?=Support::e($d['footer']['background']??'#fff')?>;color:<?=Support::e($d['footer']['text']??'#526078')?>"><p><?=Support::e($d['footer']['legalText']??'')?></p><?php if(!empty($d['footer']['showLegalLinks'])):?><a href="<?=Support::url('terminos.php')?>">Términos</a><a href="<?=Support::url('privacidad.php')?>">Privacidad</a><?php endif;?></footer>
+<?php require __DIR__.'/site-footer.php'; ?>
 <script>const t=document.querySelector('.menu-toggle'),m=document.querySelector('#mainMenu');t?.addEventListener('click',()=>{const open=m.classList.toggle('open');t.setAttribute('aria-expanded',String(open))});</script>

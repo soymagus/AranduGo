@@ -6,7 +6,7 @@ return [
         'timezone' => 'America/Asuncion',
         'debug' => false,
         'key' => 'CAMBIAR_DURANTE_LA_INSTALACION',
-        'version' => '1.0.0',
+        'version' => '1.0.1',
     ],
     'database' => [
         'host' => 'localhost',

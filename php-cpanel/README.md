@@ -1,5 +1,7 @@
 # Arandu Go PHP para cPanel
 
+Versión estable: **1.0.1**
+
 Edición independiente de Arandu Go, diseñada para PHP 8.1+, MySQL/MariaDB y almacenamiento local. No modifica ni reemplaza la aplicación original basada en Workers.
 
 ## Instalación preliminar
@@ -8,6 +10,12 @@ Edición independiente de Arandu Go, diseñada para PHP 8.1+, MySQL/MariaDB y al
 2. Verificar permisos de escritura en `config`, `storage` y `uploads` durante la instalación.
 3. Abrir `/install/` y completar el asistente.
 4. Al finalizar, ingresar en `/dashboardcliente/` con el administrador creado.
+
+## Actualizar una instalación existente
+
+El mismo ZIP sirve para instalar y actualizar. Extraelo en una subcarpeta temporal dentro de `public_html` y abrí `/subcarpeta/update/`. El asistente detecta la instalación superior, solicita una cuenta administradora, crea un respaldo y aplica solamente archivos de aplicación y migraciones pendientes. No reemplaza `config/config.php`, `uploads`, registros, respaldos ni datos del cliente.
+
+Después de esta primera actualización, los siguientes paquetes se pueden cargar desde **Panel de control → Configuración avanzada → Actualizaciones**. Si una actualización falla, el sistema restaura los archivos respaldados y conserva el ZIP de seguridad en `storage/backups`.
 
 PHPMailer y el cargador de clases ya están incluidos: el paquete instalable no necesita Composer ni acceso SSH.
 

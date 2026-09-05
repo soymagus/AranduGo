@@ -149,3 +149,7 @@ body {
 
 /* V1.9: multimedia libre a ancho completo en smartphone */
 @media(max-width:720px){.free-section .free-images{display:grid;grid-template-columns:minmax(0,1fr);width:100%;justify-items:stretch}.free-section .free-images figure,.free-section .video-frame{grid-column:1/-1!important;width:100%;max-width:none;margin-inline:0}.free-section .video-frame iframe{display:block;width:100%;max-width:none;aspect-ratio:16/9;margin-inline:auto}}
+
+/* V1.10: administración de servicios y productos */
+.service-content-editor{display:grid;gap:12px}.service-content-editor article{display:grid;grid-template-columns:34px minmax(180px,.8fr) minmax(260px,1.5fr) auto;gap:12px;align-items:start;padding:14px;border:1px solid #dce4ef;border-radius:12px;background:#fafcff}.service-content-editor textarea{min-height:76px}.service-content-editor .row-actions{align-self:center}.service-content-editor+button{margin-top:16px}
+@media(max-width:800px){.service-content-editor article{grid-template-columns:34px 1fr}.service-content-editor article>.field:nth-of-type(2),.service-content-editor .row-actions{grid-column:2}.service-content-editor .row-actions{margin-left:0;justify-content:flex-start}}

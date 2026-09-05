@@ -5,10 +5,11 @@ Edición independiente de Arandu Go, diseñada para PHP 8.1+, MySQL/MariaDB y al
 ## Instalación preliminar
 
 1. Subir el contenido de esta carpeta al document root del dominio o subdominio.
-2. Ejecutar `composer install --no-dev --optimize-autoloader`.
-3. Verificar permisos de escritura en `config`, `storage` y `uploads` durante la instalación.
-4. Abrir `/install/` y completar el asistente.
-5. Al finalizar, ingresar en `/dashboardcliente/`.
+2. Verificar permisos de escritura en `config`, `storage` y `uploads` durante la instalación.
+3. Abrir `/install/` y completar el asistente.
+4. Al finalizar, ingresar en `/dashboardcliente/` con el administrador creado.
+
+PHPMailer y el cargador de clases ya están incluidos: el paquete instalable no necesita Composer ni acceso SSH.
 
 El wizard puede conectarse a una base previamente creada o intentar crear base, usuario y permisos mediante la API UAPI de cPanel. El token de cPanel se utiliza solamente durante el proceso y no se guarda.
 
@@ -20,6 +21,13 @@ La configuración protegida admite:
 - Sendmail local.
 - SMTP propio, incluido el SMTP de una cuenta del dominio o Gmail con contraseña de aplicación.
 
-## Estado
+## Seguridad y mantenimiento
 
-Este directorio contiene el primer hito de portabilidad: instalador, esquema, autenticación, configuración, persistencia JSON, entrega de formularios, carga segura de imágenes y renderer público inicial. Consulte `MIGRATION_STATUS.md` antes de considerarlo una versión final de producción.
+- Eliminá o renombrá la carpeta `install` después de confirmar la instalación; además queda bloqueada por `storage/installed.lock`.
+- Conservá fuera de copias públicas `config/config.php`, que contiene la contraseña MySQL, SMTP y la clave secreta reCAPTCHA.
+- La clave pública reCAPTCHA se define en el dashboard; la secreta se define durante la instalación.
+- Hacé respaldos desde Configuración avanzada y también desde el sistema de copias de cPanel.
+
+## Funciones incluidas
+
+Página modular responsive, borrador/publicación, teléfonos diferenciados, galería de 24 imágenes con paginación real, servicios, redes, URLGO.me, secciones libres con texto/imagen/YouTube, páginas legales, mapa, formulario con registro rotativo, CSS/analítica aislados, importación JSON, exportación JSON/CSV/TXT y respaldo ZIP.

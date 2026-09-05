@@ -14,7 +14,7 @@ return [
   ['id'=>'s3','title'=>'Pinturas y acabados','description'=>'Color, protección y terminaciones.']
  ],
  'gallery'=>[], 'galleryLayout'=>['rows'=>1,'columns'=>3],
- 'socials'=>['facebook'=>'','instagram'=>'','x'=>'','linkedin'=>'','youtube'=>'','urlgo'=>'','whatsapp'=>''],
+ 'socials'=>['facebook'=>'','instagram'=>'','x'=>'','linkedin'=>'','youtube'=>'','tiktok'=>'','urlgo'=>'','whatsapp'=>''],
  'customSocial'=>['label'=>'','url'=>'','iconUrl'=>''],
  'menuOrder'=>['home','services','gallery','about','free1','free2','contact'],
  'menuSettings'=>['home'=>['visible'=>true,'parent'=>null],'services'=>['visible'=>true,'parent'=>null],'gallery'=>['visible'=>true,'parent'=>null],'about'=>['visible'=>true,'parent'=>null],'free1'=>['visible'=>false,'parent'=>null],'free2'=>['visible'=>false,'parent'=>null],'contact'=>['visible'=>true,'parent'=>null]],
@@ -28,6 +28,7 @@ return [
   ['id'=>'free1','title'=>'Nuestra experiencia','menuLabel'=>'Experiencia','publicLabel'=>'Experiencia','showInMenu'=>false,'html'=>'<p>Contá aquí una historia o novedad de tu negocio.</p>','media'=>[],'ctaLabel'=>'','ctaUrl'=>''],
   ['id'=>'free2','title'=>'Información adicional','menuLabel'=>'Más información','publicLabel'=>'Información','showInMenu'=>false,'html'=>'<p>Esta segunda sección puede activarse cuando la necesites.</p>','media'=>[],'ctaLabel'=>'','ctaUrl'=>'']
  ],
+ 'colorScheme'=>'default',
  'customCode'=>['css'=>'','analytics'=>''],
  'modules'=>[
   ['key'=>'hero','label'=>'Presentación','active'=>true,'background'=>'#eef6ff','text'=>'#13223a','accent'=>'#1769d2'],

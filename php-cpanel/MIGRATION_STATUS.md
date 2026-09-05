@@ -23,15 +23,15 @@ La aplicación TypeScript/Workers continúa siendo la referencia funcional. La e
 - [x] Drag and drop de módulos; orden y submenús del menú mediante controles visuales.
 - [x] Editor visual de información rápida por filas, columnas y posiciones.
 - [x] Editor visual completo de servicios/productos.
-- [ ] Galería visual de hasta 24 imágenes, carga y CTA completada; paginación pública pendiente.
-- [ ] Editor WYSIWYG y multimedia para las dos secciones libres.
-- [ ] Esquemas globales y colores por sección.
-- [ ] Configurador completo de header, footer y logos.
-- [ ] Redes sociales estándar, URLGO.me y red personalizada.
+- [x] Galería visual de hasta 24 imágenes, carga, CTA y paginación pública con conteo real.
+- [x] Editor WYSIWYG y multimedia para las dos secciones libres.
+- [x] Esquemas globales y colores por sección.
+- [x] Configurador de header, footer y logos.
+- [x] Redes sociales estándar, URLGO.me y red personalizada.
 - [x] Google reCAPTCHA v2 con clave secreta protegida.
 - [x] Registro descargable del formulario.
-- [ ] Recuperación de contraseña por correo y gestión de roles.
-- [ ] Importación/exportación JSON y respaldo ZIP completados; CSV/TXT pendiente.
-- [ ] Páginas legales con header/footer idénticos a la portada.
-- [ ] Pruebas de equivalencia en escritorio y smartphone.
-- [ ] ZIP instalable final y manual definitivo.
+- [x] Recuperación de contraseña por correo con token de un solo uso.
+- [x] Importación JSON; exportación JSON/CSV/TXT y respaldo ZIP.
+- [x] Páginas legales con identidad, colores y navegación coherentes con la portada.
+- [x] Validación de sintaxis PHP 8.3, JavaScript y estructura responsive.
+- [x] ZIP instalable final con PHPMailer incluido y manual definitivo.

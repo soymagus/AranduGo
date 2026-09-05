@@ -14,12 +14,12 @@ function cpanelCall(string $url,string $user,string $token,string $module,string
 function phpConfig(array $cfg): string { return "<?php\nreturn ".var_export($cfg,true).";\n"; }
 
 $checks=[
- 'PHP 8.1 o superior'=>version_compare(PHP_VERSION,'8.1.0','>='), 'PDO MySQL'=>extension_loaded('pdo_mysql'), 'JSON'=>extension_loaded('json'), 'mbstring'=>extension_loaded('mbstring'), 'OpenSSL'=>extension_loaded('openssl'), 'cURL (API cPanel)'=>extension_loaded('curl'), 'config escribible'=>is_writable($root.'/config'), 'storage escribible'=>is_writable($root.'/storage'), 'uploads escribible'=>is_writable($root.'/uploads')
+ 'PHP 8.1 o superior'=>version_compare(PHP_VERSION,'8.1.0','>='), 'PDO MySQL'=>extension_loaded('pdo_mysql'), 'JSON'=>extension_loaded('json'), 'mbstring'=>extension_loaded('mbstring'), 'OpenSSL'=>extension_loaded('openssl'), 'ZIP'=>extension_loaded('zip'), 'cURL (API cPanel)'=>extension_loaded('curl'), 'config escribible'=>is_writable($root.'/config'), 'storage escribible'=>is_writable($root.'/storage'), 'uploads escribible'=>is_writable($root.'/uploads')
 ];
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
  try{
-  foreach(['PHP 8.1 o superior','PDO MySQL','JSON','mbstring','OpenSSL','config escribible','storage escribible','uploads escribible'] as $required)if(empty($checks[$required]))throw new RuntimeException('No se cumple: '.$required);
+  foreach(['PHP 8.1 o superior','PDO MySQL','JSON','mbstring','OpenSSL','ZIP','config escribible','storage escribible','uploads escribible'] as $required)if(empty($checks[$required]))throw new RuntimeException('No se cumple: '.$required);
   $mode=$_POST['db_mode']??'existing'; $prefix=preg_replace('/[^a-zA-Z0-9_]/','',$_POST['db_prefix']??'ago_'); if($prefix==='')$prefix='ago_';
   $dbHost=trim($_POST['db_host']??'localhost'); $dbName=trim($_POST['db_name']??''); $dbUser=trim($_POST['db_user']??''); $dbPass=(string)($_POST['db_password']??'');
   if($mode==='cpanel'){

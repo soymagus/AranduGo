@@ -11,11 +11,14 @@ export type SiteData = {
   business: { name: string; category: string; slogan: string; description: string; phone: string; whatsapp: string; email: string; address: string; hours: string; mapsUrl: string; mapsEmbedUrl: string };
   phones: PhoneEntry[];
   quickOrder: string[];
-  hero: { title: string; text: string; image: string };
+  quickVisible: { address: boolean; hours: boolean; email: boolean };
+  quickLayout: { rows: number; columns: number; placement: "flow" | "center" | "manual"; positions: Record<string,string> };
+  hero: { title: string; text: string; image: string; showCategory: boolean; showTitle: boolean; showText: boolean; showImage: boolean; showWhatsappCta: boolean; showCallCta: boolean; showMapsCta: boolean };
   about: { title: string; text: string; showInMenu: boolean };
   services: Array<{ id: string; title: string; description: string }>;
   gallery: GalleryItem[];
   socials: { facebook: string; instagram: string; x: string; linkedin: string; youtube: string; urlgo: string; whatsapp: string };
+  customSocial: { label: string; url: string; iconUrl: string };
   menuOrder: MenuKey[];
   menuSettings: Record<MenuKey, MenuItemSetting>;
   menuDesign: { enabled: boolean; background: string; text: string; hoverBackground: string; hoverText: string; animation: "none" | "underline" | "fade" | "lift" };
@@ -50,7 +53,9 @@ export const demoData: SiteData = {
     { id:"phone-whatsapp", label:"WhatsApp", number:"+595 981 123 456", type:"whatsapp", showInQuick:true, showInContact:true },
   ],
   quickOrder: ["address","hours","phone:phone-whatsapp"],
-  hero: { title: "Todo para tu hogar, taller y construcción", text: "Calidad, cercanía y asesoramiento para resolver cada proyecto.", image: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?auto=format&fit=crop&w=1400&q=82" },
+  quickVisible: { address:true, hours:true, email:false },
+  quickLayout: { rows:1, columns:3, placement:"flow", positions:{} },
+  hero: { title: "Todo para tu hogar, taller y construcción", text: "Calidad, cercanía y asesoramiento para resolver cada proyecto.", image: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?auto=format&fit=crop&w=1400&q=82", showCategory:true, showTitle:true, showText:true, showImage:true, showWhatsappCta:true, showCallCta:true, showMapsCta:true },
   about: { title: "Más que una ferretería", text: "Somos un negocio familiar con más de 15 años de experiencia. Nos enfocamos en brindar soluciones prácticas y atención personalizada.", showInMenu: true },
   services: [
     { id: "s1", title: "Herramientas eléctricas", description: "Equipos y accesorios para profesionales." },
@@ -64,6 +69,7 @@ export const demoData: SiteData = {
     { id: "g3", image: "https://images.unsplash.com/photo-1426927308491-6380b6a9936f?auto=format&fit=crop&w=1000&q=80", title: "Soluciones profesionales", description: "Productos confiables para obra y mantenimiento.", ctaLabel: "Ver servicios", ctaUrl: "#servicios", visible: true },
   ],
   socials: { facebook: "https://facebook.com", instagram: "https://instagram.com", x: "", linkedin: "https://linkedin.com", youtube: "https://youtube.com", urlgo: "", whatsapp: "" },
+  customSocial: { label:"", url:"", iconUrl:"" },
   menuOrder: ["home","services","gallery","about","free1","free2","contact"],
   menuSettings: { home:{visible:true,parent:null}, services:{visible:true,parent:null}, gallery:{visible:true,parent:null}, about:{visible:true,parent:null}, free1:{visible:true,parent:null}, free2:{visible:true,parent:null}, contact:{visible:true,parent:null} },
   menuDesign: { enabled:false, background:"#ffffff", text:"#40506a", hoverBackground:"#eef4fc", hoverText:"#1769d2", animation:"none" },
@@ -99,9 +105,12 @@ export function normalizeSiteData(input: Partial<SiteData> | null | undefined): 
     business: { ...demoData.business, ...(input?.business ?? {}) },
     phones,
     quickOrder:[...quickOrder,...["address","hours","email",...phones.map(p=>`phone:${p.id}`)].filter(key=>!quickOrder.includes(key))],
+    quickVisible: { ...demoData.quickVisible, ...(input?.quickVisible ?? {}) },
+    quickLayout: { ...demoData.quickLayout, ...(input?.quickLayout ?? {}), positions:{...demoData.quickLayout.positions,...(input?.quickLayout?.positions??{})} },
     hero: { ...demoData.hero, ...(input?.hero ?? {}) },
     about: { ...demoData.about, ...(input?.about ?? {}) },
     socials: { ...demoData.socials, ...(input?.socials ?? {}) },
+    customSocial: { ...demoData.customSocial, ...(input?.customSocial ?? {}) },
     menuOrder: [...uniqueMenu, ...demoData.menuOrder.filter(k=>!uniqueMenu.includes(k))],
     menuSettings: { ...demoData.menuSettings, ...(input?.menuSettings ?? {}), home:{...demoData.menuSettings.home,...(input?.menuSettings?.home??{}),visible:true} },
     menuDesign: { ...demoData.menuDesign, ...(input?.menuDesign ?? {}) },

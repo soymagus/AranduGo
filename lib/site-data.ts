@@ -3,10 +3,14 @@ export type ModuleKey = "hero" | "quick" | "about" | "services" | "gallery" | "l
 export type ModuleConfig = { key: ModuleKey; label: string; active: boolean; background: string; text: string; accent: string };
 export type MenuKey = "home" | "services" | "gallery" | "about" | "free1" | "free2" | "contact";
 export type MenuItemSetting = { visible: boolean; parent: MenuKey | null };
+export type PhoneType = "landline" | "mobile" | "whatsapp";
+export type PhoneEntry = { id: string; label: string; number: string; type: PhoneType; showInQuick: boolean; showInContact: boolean };
 export type FreeMedia = { id: string; type: "image" | "youtube"; url: string; caption: string };
 export type FreeSection = { id: "free1" | "free2"; title: string; menuLabel: string; showInMenu: boolean; html: string; images: string[]; media: FreeMedia[]; ctaLabel: string; ctaUrl: string };
 export type SiteData = {
   business: { name: string; category: string; slogan: string; description: string; phone: string; whatsapp: string; email: string; address: string; hours: string; mapsUrl: string; mapsEmbedUrl: string };
+  phones: PhoneEntry[];
+  quickOrder: string[];
   hero: { title: string; text: string; image: string };
   about: { title: string; text: string; showInMenu: boolean };
   services: Array<{ id: string; title: string; description: string }>;
@@ -22,6 +26,7 @@ export type SiteData = {
   header: { identityType: "initial" | "logo"; initial: string; logo: string; logoShape: "square" | "rectangle"; logoSize: number; maintainAspect: boolean; logoWidth: number; showName: boolean; nameText: string; background: string; text: string };
   footer: { showLogo: boolean; showName: boolean; showContact: boolean; showSocials: boolean; showLegalLinks: boolean; legalText: string; showPoweredBy: boolean; background: string; text: string };
   freeSections: FreeSection[];
+  customCode: { css: string; analytics: string };
   modules: ModuleConfig[];
 };
 
@@ -40,6 +45,11 @@ export const defaultModules: ModuleConfig[] = [
 
 export const demoData: SiteData = {
   business: { name: "Ferretería San Martín", category: "Ferretería", slogan: "Todo para tu hogar, taller y construcción", description: "Herramientas, materiales y asesoramiento para que cada proyecto sea un éxito.", phone: "+595 981 123 456", whatsapp: "595981123456", email: "ventas@sanmartin.com.py", address: "Av. San Martín 1234, Asunción", hours: "Lun. a vie. 08:00–18:30 · Sáb. 08:00–13:00", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Asunción%2C+Paraguay", mapsEmbedUrl: "https://www.google.com/maps?q=Asunción%2C+Paraguay&output=embed" },
+  phones: [
+    { id:"phone-main", label:"Celular", number:"+595 981 123 456", type:"mobile", showInQuick:false, showInContact:true },
+    { id:"phone-whatsapp", label:"WhatsApp", number:"+595 981 123 456", type:"whatsapp", showInQuick:true, showInContact:true },
+  ],
+  quickOrder: ["address","hours","phone:phone-whatsapp"],
   hero: { title: "Todo para tu hogar, taller y construcción", text: "Calidad, cercanía y asesoramiento para resolver cada proyecto.", image: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?auto=format&fit=crop&w=1400&q=82" },
   about: { title: "Más que una ferretería", text: "Somos un negocio familiar con más de 15 años de experiencia. Nos enfocamos en brindar soluciones prácticas y atención personalizada.", showInMenu: true },
   services: [
@@ -67,6 +77,7 @@ export const demoData: SiteData = {
     { id: "free1", title: "Nuestra experiencia", menuLabel: "Experiencia", showInMenu: true, html: "<p>Contá aquí una historia, novedad o información especial de tu negocio.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
     { id: "free2", title: "Información adicional", menuLabel: "Más información", showInMenu: false, html: "<p>Esta segunda sección puede activarse cuando la necesites.</p>", images: [], media: [], ctaLabel: "", ctaUrl: "" },
   ],
+  customCode: { css:"", analytics:"" },
   modules: defaultModules,
 };
 
@@ -74,10 +85,20 @@ export function normalizeSiteData(input: Partial<SiteData> | null | undefined): 
   const incomingModules=input?.modules ?? [];
   const normalizedModules=[...incomingModules,...defaultModules.filter(d=>!incomingModules.some(m=>m.key===d.key))];
   const uniqueMenu=[...new Set(input?.menuOrder ?? demoData.menuOrder)].filter((k):k is MenuKey=>demoData.menuOrder.includes(k as MenuKey));
+  const legacyPhones:PhoneEntry[]=[
+    {id:"phone-main",label:"Teléfono",number:input?.business?.phone||demoData.business.phone,type:"mobile",showInQuick:false,showInContact:true},
+    {id:"phone-whatsapp",label:"WhatsApp",number:input?.business?.whatsapp||demoData.business.whatsapp,type:"whatsapp",showInQuick:true,showInContact:true},
+  ];
+  const phones=(input?.phones?.length?input.phones:legacyPhones).slice(0,12);
+  const validQuick=new Set(["address","hours","email",...phones.map(p=>`phone:${p.id}`)]);
+  const requestedOrder=input?.quickOrder??["address","hours",...phones.filter(p=>p.showInQuick).map(p=>`phone:${p.id}`)];
+  const quickOrder=[...new Set(requestedOrder)].filter(key=>validQuick.has(key));
   return {
     ...demoData,
     ...input,
     business: { ...demoData.business, ...(input?.business ?? {}) },
+    phones,
+    quickOrder:[...quickOrder,...["address","hours","email",...phones.map(p=>`phone:${p.id}`)].filter(key=>!quickOrder.includes(key))],
     hero: { ...demoData.hero, ...(input?.hero ?? {}) },
     about: { ...demoData.about, ...(input?.about ?? {}) },
     socials: { ...demoData.socials, ...(input?.socials ?? {}) },
@@ -91,6 +112,7 @@ export function normalizeSiteData(input: Partial<SiteData> | null | undefined): 
     header: { ...demoData.header, ...(input?.header ?? {}), identityType: input?.header?.identityType === "initial" ? "initial" : input?.header?.identityType ? "logo" : demoData.header.identityType },
     footer: { ...demoData.footer, ...(input?.footer ?? {}) },
     freeSections: (input?.freeSections ?? demoData.freeSections).map((f,i) => ({ ...demoData.freeSections[i], ...f, media: f.media ?? (f.images ?? []).map((url,j)=>({id:`legacy-${j}`,type:"image" as const,url,caption:""})) })),
+    customCode: { ...demoData.customCode, ...(input?.customCode ?? {}) },
     services: input?.services ?? demoData.services,
     gallery: input?.gallery ?? demoData.gallery,
     modules: normalizedModules,

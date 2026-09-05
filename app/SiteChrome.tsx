@@ -1,6 +1,8 @@
 import type { MenuKey, SiteData } from "@/lib/site-data";
 import { ChevronDown, Menu } from "lucide-react";
 import SocialIcons from "./SocialIcons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 const ARANDU_BRANDING={showPoweredBy:true,text:"Powered by Arandu Cloud"};
 
@@ -15,7 +17,7 @@ export function SiteHeader({data}:{data:SiteData}){
  const children=(parent:MenuKey)=>order.filter(k=>visible(k)&&data.menuSettings[k]?.parent===parent&&k!==parent);
  const legalChildren=(key:MenuKey)=>key==="about"&&data.legal.showInHeaderMenu?[{href:"/terminos",label:"Términos de Servicio"},{href:"/privacidad",label:"Política de Privacidad"}]:[];
  const navStyle=data.menuDesign.enabled?({"--menu-bg":data.menuDesign.background,"--menu-text":data.menuDesign.text,"--menu-hover-bg":data.menuDesign.hoverBackground,"--menu-hover-text":data.menuDesign.hoverText} as React.CSSProperties):undefined;
- return <header className="thin-header" style={{backgroundColor:data.header.background,color:data.header.text}}><a className="brand" href="/#inicio"><Identity data={data}/></a><nav className={`${data.menuDesign.enabled?"menu-custom":""} menu-anim-${data.menuDesign.enabled?data.menuDesign.animation:"none"}`} style={navStyle}>{roots.map(key=>{const sub=[...children(key).map(k=>({href:href(k),label:label(k)})),...legalChildren(key)];return sub.length?<div className="nav-submenu" key={key}><a href={href(key)}>{label(key)}<ChevronDown/></a><div>{sub.map(item=><a key={item.href} href={item.href}>{item.label}</a>)}</div></div>:<a key={key} href={href(key)}>{label(key)}</a>})}</nav><a className="header-cta" href={`https://wa.me/${data.business.whatsapp}`}>WhatsApp</a><button className="mobile-menu" aria-label="Abrir menú"><Menu/></button></header>
+ const whatsapp=data.phones.find(p=>p.type==="whatsapp"&&p.number);return <header className="thin-header" style={{backgroundColor:data.header.background,color:data.header.text}}><a className="brand" href="/#inicio"><Identity data={data}/></a><nav className={`${data.menuDesign.enabled?"menu-custom":""} menu-anim-${data.menuDesign.enabled?data.menuDesign.animation:"none"}`} style={navStyle}>{roots.map(key=>{const sub=[...children(key).map(k=>({href:href(k),label:label(k)})),...legalChildren(key)];return sub.length?<div className="nav-submenu" key={key}><a href={href(key)}>{label(key)}<ChevronDown/></a><div>{sub.map(item=><a key={item.href} href={item.href}>{item.label}</a>)}</div></div>:<a key={key} href={href(key)}>{label(key)}</a>})}</nav>{whatsapp&&<a className="header-cta whatsapp-cta" href={`https://wa.me/${whatsapp.number.replace(/\D/g,"")}`}><FontAwesomeIcon icon={faWhatsapp}/>WhatsApp</a>}<button className="mobile-menu" aria-label="Abrir menú"><Menu/></button></header>
 }
 
 export function SiteFooter({data}:{data:SiteData}){return <footer className="thin-footer" style={{backgroundColor:data.footer.background,color:data.footer.text}}>{(data.footer.showLogo||data.footer.showName)&&<div className="brand"><Identity data={data} footer/></div>}{data.footer.showContact&&<p>{data.business.email} · {data.business.phone}</p>}{data.footer.showSocials&&<div className="footer-socials"><SocialIcons socials={data.socials}/></div>}<div className="footer-legal"><p>{data.footer.legalText}{ARANDU_BRANDING.showPoweredBy&&<> · <strong>{ARANDU_BRANDING.text}</strong></>}</p>{data.footer.showLegalLinks&&<p><a href="/terminos">Términos de Servicio</a><a href="/privacidad">Política de Privacidad</a></p>}</div></footer>}

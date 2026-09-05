@@ -1,0 +1,11 @@
+"use client";
+import type { MenuKey, SiteData } from "@/lib/site-data";
+import { Switch } from "@/components/ui/switch";
+import { ArrowLeft, ArrowRight, GripVertical } from "lucide-react";
+
+export default function MenuOrganizer({data,onChange}:{data:SiteData;onChange:(data:SiteData)=>void}){
+ const labels:Record<MenuKey,string>={home:"Inicio",services:"Servicios",gallery:"Galería",about:"Nosotros",free1:data.freeSections[0].menuLabel||"Sección libre 1",free2:data.freeSections[1].menuLabel||"Sección libre 2",contact:"Contacto"};
+ const move=(i:number,dir:number)=>{const j=i+dir;if(j<0||j>=data.menuOrder.length)return;const menuOrder=[...data.menuOrder];[menuOrder[i],menuOrder[j]]=[menuOrder[j],menuOrder[i]];onChange({...data,menuOrder})};
+ const setting=(key:MenuKey,patch:Partial<SiteData["menuSettings"][MenuKey]>)=>onChange({...data,menuSettings:{...data.menuSettings,[key]:{...data.menuSettings[key],...patch}}});
+ return <section className="editor-card"><div className="card-head"><div><small>Orden de izquierda a derecha</small><h2>Organizar menú</h2><p>Elegí el orden, la visibilidad y qué opciones funcionarán como submenús.</p></div></div><div className="module-list">{data.menuOrder.map((key,i)=><div className="module-row menu-config-row" key={key}><GripVertical/><span className="menu-position">{i+1}</span><strong>{labels[key]}</strong><label className="menu-parent">Ubicación<select value={data.menuSettings[key].parent??"root"} onChange={e=>setting(key,{parent:e.target.value==="root"?null:e.target.value as MenuKey})} disabled={key==="home"}><option value="root">Menú principal</option>{data.menuOrder.filter(parent=>parent!==key&&data.menuSettings[parent].parent===null).map(parent=><option key={parent} value={parent}>Submenú de {labels[parent]}</option>)}</select></label><div className="row-actions"><button aria-label="Mover a la izquierda" onClick={()=>move(i,-1)} disabled={i===0}><ArrowLeft/></button><button aria-label="Mover a la derecha" onClick={()=>move(i,1)} disabled={i===data.menuOrder.length-1}><ArrowRight/></button>{key==="home"?<span className="always-visible">Siempre visible</span>:<label className="menu-visible"><Switch checked={data.menuSettings[key].visible} onCheckedChange={visible=>setting(key,{visible})}/>{data.menuSettings[key].visible?"Visible":"Oculto"}</label>}</div></div>)}</div></section>
+}

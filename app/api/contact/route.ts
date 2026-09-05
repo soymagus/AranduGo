@@ -1,5 +1,5 @@
 import { getDb } from "@/db";
-import { contactMessages, siteProfiles } from "@/db/schema";
+import { contactMessages, siteProfiles, siteSecrets } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { demoData, normalizeSiteData } from "@/lib/site-data";
 import { env } from "cloudflare:workers";
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   if(captchaType==="integrated"&&profile.contactForm.challengeMethod==="checkbox"&&body.answer!=="true")return Response.json({error:"Confirmá que sos una persona."},{status:400});
   if(captchaType==="integrated"&&profile.contactForm.challengeMethod==="question"&&body.answer?.trim().toLocaleLowerCase("es")!==profile.contactForm.challengeAnswer.trim().toLocaleLowerCase("es"))return Response.json({error:"La respuesta de verificación no es correcta."},{status:400});
   if(captchaType==="google_v2"){
-   const secret=(env as unknown as Record<string,string>).RECAPTCHA_SECRET_KEY;
+   const [storedSecret]=await getDb().select({value:siteSecrets.value}).from(siteSecrets).where(eq(siteSecrets.id,"demo:recaptcha-secret")).limit(1);const secret=(env as unknown as Record<string,string>).RECAPTCHA_SECRET_KEY||storedSecret?.value;
    if(!secret||!body.recaptchaToken)return Response.json({error:"Google reCAPTCHA todavía no está completamente configurado."},{status:503});
    const form=new URLSearchParams({secret,response:body.recaptchaToken});const verification=await fetch("https://www.google.com/recaptcha/api/siteverify",{method:"POST",headers:{"content-type":"application/x-www-form-urlencoded"},body:form});const result=await verification.json() as {success?:boolean};
    if(!result.success)return Response.json({error:"Google reCAPTCHA no pudo verificar la solicitud."},{status:400});

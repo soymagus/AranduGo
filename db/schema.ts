@@ -17,3 +17,9 @@ export const contactMessages = sqliteTable("contact_messages", {
   message: text("message").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
+
+export const siteSecrets = sqliteTable("site_secrets", {
+  id: text("id").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});

@@ -1,11 +1,13 @@
 import { type ModuleConfig } from "@/lib/site-data";
 import { getPublished } from "@/lib/published";
 import type { Metadata } from "next";
-import { Clock3, Mail, MapPin, Phone, Wrench } from "lucide-react";
+import { Clock3, Mail, MapPin, Wrench } from "lucide-react";
 import PublicGallery from "./PublicGallery";
 import SocialIcons from "./SocialIcons";
 import ContactForm from "./ContactForm";
 import { SiteFooter, SiteHeader } from "./SiteChrome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 export const dynamic = "force-dynamic";
 function safeHtml(html:string){return html.replace(/<(script|style|iframe)[\s\S]*?<\/\1>/gi,"").replace(/\son\w+\s*=\s*["'][^"']*["']/gi,"").replace(/javascript:/gi,"")}
@@ -18,12 +20,12 @@ export default async function Home() {
   const style = (m: ModuleConfig) => ({ backgroundColor: m.background, color: m.text, "--accent": m.accent } as React.CSSProperties);
   const sections: Record<string, React.ReactNode> = {
     hero: <section id="inicio" className={`public-section hero-section ${data.hero.image?"":"without-image"}`} style={style(byKey.hero)}><div><span className="eyebrow">{data.business.category}</span><h1>{data.hero.title}</h1><p>{data.hero.text}</p><div className="action-row"><a className="primary-action" href={`https://wa.me/${data.business.whatsapp}`}>WhatsApp</a><a className="secondary-action" href={`tel:${data.business.phone}`}>Llamar</a><a className="secondary-action" href="#ubicacion">Cómo llegar</a></div></div>{data.hero.image&&<img src={data.hero.image} alt={data.business.name} />}</section>,
-    quick: <section className="public-section quick-grid" style={style(byKey.quick)}><div><MapPin/><strong>Dirección</strong><span>{data.business.address}</span></div><div><Clock3/><strong>Horarios</strong><span>{data.business.hours}</span></div><div><Phone/><strong>Teléfono / WhatsApp</strong><span>{data.business.phone}</span></div></section>,
+    quick: <section className="public-section quick-grid" style={style(byKey.quick)}><div><MapPin/><strong>Dirección</strong><span>{data.business.address}</span></div><div><Clock3/><strong>Horarios</strong><span>{data.business.hours}</span></div><div><FontAwesomeIcon icon={faWhatsapp}/><strong>WhatsApp</strong><span>{data.business.phone}</span></div></section>,
     about: <section id="nosotros" className="public-section split-copy" style={style(byKey.about)}><span className="section-number">01</span><div><p className="eyebrow">Sobre el negocio</p><h2>{data.about.title}</h2><p>{data.about.text}</p></div></section>,
     services: <section id="servicios" className="public-section" style={style(byKey.services)}><div className="section-heading"><div><p className="eyebrow">Lo que hacemos</p><h2>Servicios y productos</h2></div><Wrench/></div><div className="service-grid">{data.services.map((s,i)=><article key={s.id}><span>{String(i+1).padStart(2,"0")}</span><h3>{s.title}</h3><p>{s.description}</p></article>)}</div></section>,
     gallery: <section id="galeria" className="public-section" style={style(byKey.gallery)}><div className="section-heading"><div><p className="eyebrow">Galería</p><h2>Conocé nuestro trabajo</h2></div><span>{data.gallery.filter(x=>x.visible).length} fotos</span></div><PublicGallery items={data.gallery} rows={data.galleryLayout.rows} columns={data.galleryLayout.columns}/></section>,
     location: <section id="ubicacion" className="public-section location-grid" style={style(byKey.location)}><iframe className="google-map" src={data.business.mapsEmbedUrl} loading="lazy" referrerPolicy="no-referrer-when-downgrade" title={`Mapa de ${data.business.name}`}/><div><p className="eyebrow">Ubicación y horarios</p><h2>Estamos cerca</h2><p>{data.business.address}</p><p>{data.business.hours}</p><a className="secondary-action" href={data.business.mapsUrl} target="_blank" rel="noreferrer"><MapPin/> Abrir mapa</a></div></section>,
-    contact: <section id="contacto" className="public-section contact-section" style={style(byKey.contact)}><div className="contact-intro"><p className="eyebrow">Contacto</p><h2>¿Tenés alguna consulta?</h2><p>Elegí el canal que te resulte más cómodo o dejanos tu mensaje.</p><div className="contact-methods"><a href={`https://wa.me/${data.business.whatsapp}`}><Phone/> <span><small>WhatsApp</small><strong>{data.business.phone}</strong></span></a><a href={`mailto:${data.business.email}`}><Mail/> <span><small>Correo</small><strong>{data.business.email}</strong></span></a></div></div>{data.contactForm.enabled&&<ContactForm captchaType={data.contactForm.captchaType} googleSiteKey={data.contactForm.googleSiteKey} challengeMethod={data.contactForm.challengeMethod} challengeQuestion={data.contactForm.challengeQuestion}/>}</section>,
+    contact: <section id="contacto" className="public-section contact-section" style={style(byKey.contact)}><div className="contact-intro"><p className="eyebrow">Contacto</p><h2>¿Tenés alguna consulta?</h2><p>Elegí el canal que te resulte más cómodo o dejanos tu mensaje.</p><div className="contact-methods"><a href={`https://wa.me/${data.business.whatsapp}`}><FontAwesomeIcon icon={faWhatsapp}/> <span><small>WhatsApp</small><strong>{data.business.phone}</strong></span></a><a href={`mailto:${data.business.email}`}><Mail/> <span><small>Correo</small><strong>{data.business.email}</strong></span></a></div></div>{data.contactForm.enabled&&<ContactForm captchaType={data.contactForm.captchaType} googleSiteKey={data.contactForm.googleSiteKey} challengeMethod={data.contactForm.challengeMethod} challengeQuestion={data.contactForm.challengeQuestion}/>}</section>,
     social: <section className="public-section social-band" style={style(byKey.social)}><strong>Seguinos</strong><SocialIcons socials={data.socials}/></section>,
     free1: null,
     free2: null,

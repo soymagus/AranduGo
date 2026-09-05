@@ -2,6 +2,7 @@ export type GalleryItem = { id: string; image: string; title: string; descriptio
 export type ModuleKey = "hero" | "quick" | "about" | "services" | "gallery" | "location" | "contact" | "social" | "free1" | "free2";
 export type ModuleConfig = { key: ModuleKey; label: string; active: boolean; background: string; text: string; accent: string };
 export type MenuKey = "home" | "services" | "gallery" | "about" | "free1" | "free2" | "contact";
+export type MenuItemSetting = { visible: boolean; parent: MenuKey | null };
 export type FreeMedia = { id: string; type: "image" | "youtube"; url: string; caption: string };
 export type FreeSection = { id: "free1" | "free2"; title: string; menuLabel: string; showInMenu: boolean; html: string; images: string[]; media: FreeMedia[]; ctaLabel: string; ctaUrl: string };
 export type SiteData = {
@@ -10,8 +11,10 @@ export type SiteData = {
   about: { title: string; text: string; showInMenu: boolean };
   services: Array<{ id: string; title: string; description: string }>;
   gallery: GalleryItem[];
-  socials: { facebook: string; instagram: string; x: string; linkedin: string; youtube: string; urlgo: string };
+  socials: { facebook: string; instagram: string; x: string; linkedin: string; youtube: string; urlgo: string; whatsapp: string };
   menuOrder: MenuKey[];
+  menuSettings: Record<MenuKey, MenuItemSetting>;
+  menuDesign: { enabled: boolean; background: string; text: string; hoverBackground: string; hoverText: string; animation: "none" | "underline" | "fade" | "lift" };
   galleryLayout: { rows: number; columns: number };
   contactForm: { enabled: boolean; captchaEnabled: boolean; captchaType: "none" | "integrated" | "google_v2"; googleSiteKey: string; challengeMethod: "math" | "checkbox" | "question"; challengeQuestion: string; challengeAnswer: string; recipientLabel: string };
   seo: { allowIndexing: boolean };
@@ -50,8 +53,10 @@ export const demoData: SiteData = {
     { id: "g2", image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1000&q=80", title: "Asesoramiento cercano", description: "Te ayudamos a elegir los materiales adecuados.", ctaLabel: "Escribir por WhatsApp", ctaUrl: "https://wa.me/595981123456", visible: true },
     { id: "g3", image: "https://images.unsplash.com/photo-1426927308491-6380b6a9936f?auto=format&fit=crop&w=1000&q=80", title: "Soluciones profesionales", description: "Productos confiables para obra y mantenimiento.", ctaLabel: "Ver servicios", ctaUrl: "#servicios", visible: true },
   ],
-  socials: { facebook: "https://facebook.com", instagram: "https://instagram.com", x: "", linkedin: "https://linkedin.com", youtube: "https://youtube.com", urlgo: "" },
+  socials: { facebook: "https://facebook.com", instagram: "https://instagram.com", x: "", linkedin: "https://linkedin.com", youtube: "https://youtube.com", urlgo: "", whatsapp: "" },
   menuOrder: ["home","services","gallery","about","free1","free2","contact"],
+  menuSettings: { home:{visible:true,parent:null}, services:{visible:true,parent:null}, gallery:{visible:true,parent:null}, about:{visible:true,parent:null}, free1:{visible:true,parent:null}, free2:{visible:true,parent:null}, contact:{visible:true,parent:null} },
+  menuDesign: { enabled:false, background:"#ffffff", text:"#40506a", hoverBackground:"#eef4fc", hoverText:"#1769d2", animation:"none" },
   galleryLayout: { rows: 1, columns: 3 },
   contactForm: { enabled: true, captchaEnabled: true, captchaType: "integrated", googleSiteKey: "", challengeMethod: "math", challengeQuestion: "¿Cuál es el color del cielo en un día despejado?", challengeAnswer: "azul", recipientLabel: "Atención comercial" },
   seo: { allowIndexing: true },
@@ -68,6 +73,7 @@ export const demoData: SiteData = {
 export function normalizeSiteData(input: Partial<SiteData> | null | undefined): SiteData {
   const incomingModules=input?.modules ?? [];
   const normalizedModules=[...incomingModules,...defaultModules.filter(d=>!incomingModules.some(m=>m.key===d.key))];
+  const uniqueMenu=[...new Set(input?.menuOrder ?? demoData.menuOrder)].filter((k):k is MenuKey=>demoData.menuOrder.includes(k as MenuKey));
   return {
     ...demoData,
     ...input,
@@ -75,7 +81,9 @@ export function normalizeSiteData(input: Partial<SiteData> | null | undefined): 
     hero: { ...demoData.hero, ...(input?.hero ?? {}) },
     about: { ...demoData.about, ...(input?.about ?? {}) },
     socials: { ...demoData.socials, ...(input?.socials ?? {}) },
-    menuOrder: [...(input?.menuOrder ?? demoData.menuOrder), ...demoData.menuOrder.filter(k=>!(input?.menuOrder ?? []).includes(k))],
+    menuOrder: [...uniqueMenu, ...demoData.menuOrder.filter(k=>!uniqueMenu.includes(k))],
+    menuSettings: { ...demoData.menuSettings, ...(input?.menuSettings ?? {}), home:{...demoData.menuSettings.home,...(input?.menuSettings?.home??{}),visible:true} },
+    menuDesign: { ...demoData.menuDesign, ...(input?.menuDesign ?? {}) },
     galleryLayout: { ...demoData.galleryLayout, ...(input?.galleryLayout ?? {}) },
     contactForm: { ...demoData.contactForm, ...(input?.contactForm ?? {}) },
     seo: { ...demoData.seo, ...(input?.seo ?? {}) },

@@ -60,7 +60,9 @@ final class UpdateManager
         $file=$dir.'/pre-update-'.$from.'-to-'.$to.'-'.date('Ymd-His').'.zip';$zip=new ZipArchive();if($zip->open($file,ZipArchive::CREATE|ZipArchive::OVERWRITE)!==true)throw new RuntimeException('No se pudo crear el respaldo.');
         foreach(self::ROOT_FILES as $path)if(is_file($this->root.'/'.$path))$zip->addFile($this->root.'/'.$path,'files/'.$path);
         foreach(self::ROOT_DIRS as $dirPath)$this->addDirectory($zip,$this->root.'/'.$dirPath,'files/'.$dirPath);
-        $profiles=Database::connection()->query('SELECT * FROM '.Database::table('site_profiles'))->fetchAll();$zip->addFromString('database/site_profiles.json',json_encode($profiles,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+        $this->addDirectory($zip,$this->root.'/uploads','protected/uploads');
+        if(is_file($this->root.'/config/config.php'))$zip->addFile($this->root.'/config/config.php','protected/config/config.php');
+        $pdo=Database::connection();foreach(['users','site_profiles','contact_messages','password_resets','migrations','update_history'] as $table){try{$rows=$pdo->query('SELECT * FROM '.Database::table($table))->fetchAll();$zip->addFromString('database/'.$table.'.json',json_encode($rows,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));}catch(\Throwable){}}
         $zip->close();return $file;
     }
 

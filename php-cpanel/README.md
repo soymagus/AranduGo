@@ -1,6 +1,6 @@
 # Arandu Go PHP para cPanel
 
-Versión estable: **1.0.1**
+Versión estable: **1.0.2**
 
 Edición independiente de Arandu Go, diseñada para PHP 8.1+, MySQL/MariaDB y almacenamiento local. No modifica ni reemplaza la aplicación original basada en Workers.
 

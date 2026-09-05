@@ -5,7 +5,11 @@ namespace AranduGo;
 
 final class SiteRepository
 {
-    public static function draft(): array { return self::load('draft_json'); }
+    public static function draft(): array
+    {
+        $draft=self::load('draft_json');
+        return self::isProfile($draft)?$draft:self::published();
+    }
     public static function published(): array { return self::load('published_json'); }
 
     private static function load(string $column): array
@@ -13,6 +17,11 @@ final class SiteRepository
         $table = Database::table('site_profiles');
         $row = Database::connection()->query("SELECT {$column} FROM {$table} WHERE id=1")->fetch();
         return json_decode((string) ($row[$column] ?? '{}'), true) ?: [];
+    }
+
+    private static function isProfile(array $data): bool
+    {
+        return !empty($data['business']) && is_array($data['modules']??null);
     }
 
     public static function save(array $data, bool $publish): void

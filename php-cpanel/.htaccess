@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+RewriteRule ^(?:config|src|database|storage|vendor)(?:/|$) - [F,L,NC]
+
+<FilesMatch "^(composer\.(json|lock)|README\.md)$">
+  Require all denied
+</FilesMatch>

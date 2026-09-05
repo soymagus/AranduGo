@@ -1,6 +1,6 @@
 import { getDb } from "@/db";
 import { contactMessages, siteProfiles, siteSecrets } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, lt } from "drizzle-orm";
 import { demoData, normalizeSiteData } from "@/lib/site-data";
 import { env } from "cloudflare:workers";
 
@@ -20,6 +20,9 @@ export async function POST(request: Request) {
    const form=new URLSearchParams({secret,response:body.recaptchaToken});const verification=await fetch("https://www.google.com/recaptcha/api/siteverify",{method:"POST",headers:{"content-type":"application/x-www-form-urlencoded"},body:form});const result=await verification.json() as {success?:boolean};
    if(!result.success)return Response.json({error:"Google reCAPTCHA no pudo verificar la solicitud."},{status:400});
   }
-  await getDb().insert(contactMessages).values({id:crypto.randomUUID(),name,email,phone:body.phone?.trim()??"",message,createdAt:new Date()});return Response.json({ok:true});
+  const db=getDb();const now=new Date();const cutoff=new Date(now.getTime()-180*24*60*60*1000);await db.delete(contactMessages).where(lt(contactMessages.createdAt,cutoff));
+  const runtime=env as unknown as Record<string,string>;let delivered=false;const recipient=profile.contactForm.recipientEmail.trim();const apiKey=runtime.RESEND_API_KEY;const timezone=profile.contactForm.timezone||"UTC";
+  if(recipient&&apiKey){const safe=(value:string)=>value.replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]!));const sent=await fetch("https://api.resend.com/emails",{method:"POST",headers:{authorization:`Bearer ${apiKey}`,"content-type":"application/json"},body:JSON.stringify({from:runtime.CONTACT_FROM_EMAIL||"Arandu Go <onboarding@resend.dev>",to:[recipient],reply_to:email,subject:`Nueva consulta de ${name}`,html:`<h2>Nueva consulta desde ${safe(profile.business.name)}</h2><p><strong>Nombre:</strong> ${safe(name)}</p><p><strong>Correo:</strong> ${safe(email)}</p><p><strong>Teléfono:</strong> ${safe(body.phone?.trim()??"")}</p><p><strong>Mensaje:</strong></p><p>${safe(message).replace(/\n/g,"<br>")}</p>`})});delivered=sent.ok}
+  await db.insert(contactMessages).values({id:crypto.randomUUID(),name,email,phone:body.phone?.trim()??"",message:profile.contactForm.keepMessageCopy?message:"",timezone,delivered,createdAt:now});return Response.json({ok:true,delivered});
  }catch{return Response.json({error:"No pudimos enviar el mensaje. Intentá nuevamente."},{status:500})}
 }

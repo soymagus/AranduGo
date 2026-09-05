@@ -23,7 +23,7 @@ export type SiteData = {
   menuSettings: Record<MenuKey, MenuItemSetting>;
   menuDesign: { enabled: boolean; background: string; text: string; hoverBackground: string; hoverText: string; animation: "none" | "underline" | "fade" | "lift" };
   galleryLayout: { rows: number; columns: number };
-  contactForm: { enabled: boolean; captchaEnabled: boolean; captchaType: "none" | "integrated" | "google_v2"; googleSiteKey: string; challengeMethod: "math" | "checkbox" | "question"; challengeQuestion: string; challengeAnswer: string; recipientLabel: string };
+  contactForm: { enabled: boolean; captchaEnabled: boolean; captchaType: "none" | "integrated" | "google_v2"; googleSiteKey: string; challengeMethod: "math" | "checkbox" | "question"; challengeQuestion: string; challengeAnswer: string; recipientLabel: string; recipientEmail: string; keepMessageCopy: boolean; timezone: string };
   seo: { allowIndexing: boolean };
   legal: { mode: "predefined" | "custom"; termsHtml: string; privacyHtml: string; showInHeaderMenu: boolean };
   header: { identityType: "initial" | "logo"; initial: string; logo: string; logoShape: "square" | "rectangle"; logoSize: number; maintainAspect: boolean; logoWidth: number; showName: boolean; nameText: string; background: string; text: string };
@@ -74,7 +74,7 @@ export const demoData: SiteData = {
   menuSettings: { home:{visible:true,parent:null}, services:{visible:true,parent:null}, gallery:{visible:true,parent:null}, about:{visible:true,parent:null}, free1:{visible:true,parent:null}, free2:{visible:true,parent:null}, contact:{visible:true,parent:null} },
   menuDesign: { enabled:false, background:"#ffffff", text:"#40506a", hoverBackground:"#eef4fc", hoverText:"#1769d2", animation:"none" },
   galleryLayout: { rows: 1, columns: 3 },
-  contactForm: { enabled: true, captchaEnabled: true, captchaType: "integrated", googleSiteKey: "", challengeMethod: "math", challengeQuestion: "¿Cuál es el color del cielo en un día despejado?", challengeAnswer: "azul", recipientLabel: "Atención comercial" },
+  contactForm: { enabled: true, captchaEnabled: true, captchaType: "integrated", googleSiteKey: "", challengeMethod: "math", challengeQuestion: "¿Cuál es el color del cielo en un día despejado?", challengeAnswer: "azul", recipientLabel: "Atención comercial", recipientEmail:"", keepMessageCopy:false, timezone:"America/Asuncion" },
   seo: { allowIndexing: true },
   legal: { mode: "predefined", termsHtml: "", privacyHtml: "", showInHeaderMenu: false },
   header: { identityType: "initial", initial: "F", logo: "", logoShape: "square", logoSize: 36, maintainAspect: true, logoWidth: 180, showName: true, nameText: "Ferretería San Martín", background: "#ffffff", text: "#172033" },

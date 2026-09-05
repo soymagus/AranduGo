@@ -15,6 +15,8 @@ export const contactMessages = sqliteTable("contact_messages", {
   email: text("email").notNull(),
   phone: text("phone").notNull().default(""),
   message: text("message").notNull(),
+  timezone: text("timezone").notNull().default("UTC"),
+  delivered: integer("delivered", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
 

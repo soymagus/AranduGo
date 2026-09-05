@@ -5,4 +5,5 @@ export const DASHBOARD_BRANDING = {
   imageAlt: "Arandu Cloud",
   productName: "Arandu Go",
   subtitle: "Panel de control",
+  stableVersion: "1.0.0",
 };

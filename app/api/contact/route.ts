@@ -4,6 +4,14 @@ import { eq, lt } from "drizzle-orm";
 import { demoData, normalizeSiteData } from "@/lib/site-data";
 import { env } from "cloudflare:workers";
 
+const escapeHtml=(value:string)=>value.replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]!));
+
+async function deliverWithGateway(runtime:Record<string,string>,payload:Record<string,string>){
+ const url=runtime.CONTACT_MAIL_GATEWAY_URL;const secret=runtime.CONTACT_MAIL_GATEWAY_SECRET;
+ if(!url||!secret)return false;
+ try{const response=await fetch(url,{method:"POST",headers:{authorization:`Bearer ${secret}`,"content-type":"application/json"},body:JSON.stringify(payload)});return response.ok}catch{return false}
+}
+
 export async function POST(request: Request) {
  try {
   const body=await request.json() as {name?:string;email?:string;phone?:string;message?:string;website?:string;captchaType?:"none"|"integrated"|"google_v2";challengeMethod?:"math"|"checkbox"|"question";a?:number;b?:number;answer?:string;recaptchaToken?:string};
@@ -21,8 +29,9 @@ export async function POST(request: Request) {
    if(!result.success)return Response.json({error:"Google reCAPTCHA no pudo verificar la solicitud."},{status:400});
   }
   const db=getDb();const now=new Date();const cutoff=new Date(now.getTime()-180*24*60*60*1000);await db.delete(contactMessages).where(lt(contactMessages.createdAt,cutoff));
-  const runtime=env as unknown as Record<string,string>;let delivered=false;const recipient=profile.contactForm.recipientEmail.trim();const apiKey=runtime.RESEND_API_KEY;const timezone=profile.contactForm.timezone||"UTC";
-  if(recipient&&apiKey){const safe=(value:string)=>value.replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]!));const sent=await fetch("https://api.resend.com/emails",{method:"POST",headers:{authorization:`Bearer ${apiKey}`,"content-type":"application/json"},body:JSON.stringify({from:runtime.CONTACT_FROM_EMAIL||"Arandu Go <onboarding@resend.dev>",to:[recipient],reply_to:email,subject:`Nueva consulta de ${name}`,html:`<h2>Nueva consulta desde ${safe(profile.business.name)}</h2><p><strong>Nombre:</strong> ${safe(name)}</p><p><strong>Correo:</strong> ${safe(email)}</p><p><strong>Teléfono:</strong> ${safe(body.phone?.trim()??"")}</p><p><strong>Mensaje:</strong></p><p>${safe(message).replace(/\n/g,"<br>")}</p>`})});delivered=sent.ok}
+  const runtime=env as unknown as Record<string,string>;let delivered=false;const recipient=profile.contactForm.recipientEmail.trim();const apiKey=runtime.RESEND_API_KEY;const timezone=profile.contactForm.timezone||"UTC";const transport=profile.contactForm.mailTransport||"resend";
+  if(recipient&&transport==="resend"&&apiKey){const sent=await fetch("https://api.resend.com/emails",{method:"POST",headers:{authorization:`Bearer ${apiKey}`,"content-type":"application/json"},body:JSON.stringify({from:runtime.CONTACT_FROM_EMAIL||"Arandu Go <onboarding@resend.dev>",to:[recipient],reply_to:email,subject:`Nueva consulta de ${name}`,html:`<h2>Nueva consulta desde ${escapeHtml(profile.business.name)}</h2><p><strong>Nombre:</strong> ${escapeHtml(name)}</p><p><strong>Correo:</strong> ${escapeHtml(email)}</p><p><strong>Teléfono:</strong> ${escapeHtml(body.phone?.trim()??"")}</p><p><strong>Mensaje:</strong></p><p>${escapeHtml(message).replace(/\n/g,"<br>")}</p>`})});delivered=sent.ok}
+  if(recipient&&transport!=="resend")delivered=await deliverWithGateway(runtime,{transport,recipient,business:profile.business.name,name,email,phone:body.phone?.trim()??"",message});
   await db.insert(contactMessages).values({id:crypto.randomUUID(),name,email,phone:body.phone?.trim()??"",message:profile.contactForm.keepMessageCopy?message:"",timezone,delivered,createdAt:now});return Response.json({ok:true,delivered});
  }catch{return Response.json({error:"No pudimos enviar el mensaje. Intentá nuevamente."},{status:500})}
 }

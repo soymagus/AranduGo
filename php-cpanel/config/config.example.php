@@ -30,4 +30,7 @@ return [
             'password' => '',
         ],
     ],
+    'recaptcha' => [
+        'secret_key' => '',
+    ],
 ];

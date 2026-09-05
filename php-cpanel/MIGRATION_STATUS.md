@@ -19,19 +19,19 @@ La aplicación TypeScript/Workers continúa siendo la referencia funcional. La e
 
 ## En portabilidad y validación
 
-- [ ] Editor visual completo de teléfonos múltiples y sus selectores.
-- [ ] Drag and drop de módulos y menú con submenús.
-- [ ] Editor visual de información rápida por filas, columnas y posiciones.
-- [ ] Editor visual completo de servicios/productos.
-- [ ] Galería visual paginada de hasta 24 imágenes, carga y CTA.
+- [x] Editor visual de teléfonos múltiples y sus selectores.
+- [x] Drag and drop de módulos; orden y submenús del menú mediante controles visuales.
+- [x] Editor visual de información rápida por filas, columnas y posiciones.
+- [x] Editor visual completo de servicios/productos.
+- [ ] Galería visual de hasta 24 imágenes, carga y CTA completada; paginación pública pendiente.
 - [ ] Editor WYSIWYG y multimedia para las dos secciones libres.
 - [ ] Esquemas globales y colores por sección.
 - [ ] Configurador completo de header, footer y logos.
 - [ ] Redes sociales estándar, URLGO.me y red personalizada.
-- [ ] Google reCAPTCHA con claves protegidas.
-- [ ] Registro descargable del formulario.
+- [x] Google reCAPTCHA v2 con clave secreta protegida.
+- [x] Registro descargable del formulario.
 - [ ] Recuperación de contraseña por correo y gestión de roles.
-- [ ] Importación JSON/CSV/TXT y respaldo ZIP completo.
+- [ ] Importación/exportación JSON y respaldo ZIP completados; CSV/TXT pendiente.
 - [ ] Páginas legales con header/footer idénticos a la portada.
 - [ ] Pruebas de equivalencia en escritorio y smartphone.
 - [ ] ZIP instalable final y manual definitivo.
